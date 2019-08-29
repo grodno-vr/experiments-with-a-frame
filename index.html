@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>360&deg; Image Gallery</title>
+    <meta name="description" content="360&deg; Image Gallery - A-Frame">
+    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.js"></script>
+</head>
+<body>
+<a-scene>
+    <a-assets>
+        <img id="bridge" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/bridge/background.jpg">
+        <img id="bridge-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/bridge/background.jpg">
+        <img id="monastery-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/monastery/background.jpg">
+        <img id="kalozha-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/kalozha/background.jpg">
+        <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+        <img id="monastery" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/monastery/background.jpg">
+        <img id="kalozha" crossorigin="anonymous" src="https://raw.githubusercontent.com/grodno-vr/grodno-vr.github.io/master/static_assets/places/kalozha/background.jpg">
+
+        <script id="link" type="text/html">
+            <a-entity class="link"
+                      geometry="primitive: sphere; radius: 1.5"
+                      light="type: point; color: white; intensity: 2"
+                      material="color: white; shader: flat; src: ${thumb}"
+                      event-set__mouseenter="scale: 1.6 1.6 1"
+                      event-set__mouseleave="scale: 1 1 1"
+                      event-set__click="_target: #image-360; _delay: 300; material.src: ${src}"
+                      proxy-event="event: click; to: #image-360; as: fade"
+                      position="${position}"
+                      sound="on: click; src: #click-sound">
+            </a-entity>
+        </script>
+    </a-assets>
+
+    <a-sky id="image-360" radius="15" src="#bridge"
+           animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 300; startEvents: fade"
+           animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #FFF; dur: 300; startEvents: animationcomplete__fade"></a-sky>
+
+    <a-entity id="links" layout="type: line; margin: 1.5" position="0 -1 -4">
+        <a-entity template="src: #link" data-src="#monastery" data-thumb="#monastery-thumb" data-position="5 0 -4"></a-entity>
+        <a-entity template="src: #link" data-src="#bridge" data-thumb="#bridge-thumb" data-position="0 0 -5"></a-entity>
+        <a-entity template="src: #link" data-src="#kalozha" data-thumb="#kalozha-thumb" data-position="-5 0 -4"></a-entity>
+    </a-entity>
+
+    <a-entity id="camera" camera look-controls wasd-controls>
+        <a-entity position="0 0 -5"
+                  geometry="primitive: ring; radiusInner: 0.15; radiusOuter: 0.3;"
+                  material="color: white; shader: flat"
+                  animation__click="property: scale; from: 0.2 0.2 0.2; to: 1 1 1; dur: 120; startEvents: click;"
+                  cursor="maxDistance: 30; fuse: true">
+            <a-animation begin="fusing" easing="ease-in" attribute="scale"
+                         fill="backwards" from="1 1 1" to="0.2 0.2 0.2" dur="1500"></a-animation>
+        </a-entity>
+
+    </a-entity>
+</a-scene>
+</body>
+</html>
